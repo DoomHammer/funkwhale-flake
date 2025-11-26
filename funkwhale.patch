@@ -18,3 +18,17 @@ index 2c50c4082..e12abdb7f 100755
 -
  if __name__ == "__main__":
      raise SystemExit(main())
+--- a/api/funkwhale_api/__init__.py	2025-04-14 18:34:55
++++ b/api/funkwhale_api/__init__.py	2025-11-26 18:34:12
+@@ -1,4 +1,7 @@
+-from importlib.metadata import version as get_version
+-
+-version = get_version("funkwhale_api")
+-__version__ = version
++__version__ = "2.0.0"
++__version_info__ = tuple(
++    [
++        int(num) if num.isdigit() else num
++        for num in __version__.replace("-", ".", 1).split(".")
++    ]
++)
