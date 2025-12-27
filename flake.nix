@@ -1,15 +1,14 @@
 {
   description = "Funkwhale";
 
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
   outputs =
     { self, nixpkgs }:
     let
-      version = "2.0.0-alpha.2";
-      job_id = "253722";
-      funkwhale-sha256 = "sha256-x5phxrghnt1xaznXkvEURi8iXL6er7wGCp86usgvy+A=";
-      funkwhale-front-sha256 = "sha256-21n63dUU873Ztvx0KatUMlNIM07JTAnd6l2tSdSxoxc=";
+      version = "2.0.0-rc5";
+      funkwhale-sha256 = "sha256-9Hq27CEEwKl1WVYhZVQf4pc91uT55Qr+dqVA9avxzWA=";
+      funkwhale-front-sha256 = "sha256-FvZ/8q7WS+xfaH+fcLPiK0STVJVCqwSyqV1sBSDgEWE=";
       systems = [
         "x86_64-linux"
         "i686-linux"
@@ -38,7 +37,7 @@
             unpackCmd = "unzip $curSrc";
 
             src = fetchurl {
-              url = "https://dev.funkwhale.audio/funkwhale/funkwhale/-/jobs/${job_id}/artifacts/download";
+              url = "https://dev.funkwhale.audio/funkwhale/funkwhale/-/jobs/artifacts/${version}/download?job=build_front";
               sha256 = funkwhale-front-sha256;
             };
 
@@ -58,6 +57,10 @@
               url = "https://dev.funkwhale.audio/funkwhale/funkwhale/-/archive/${version}/funkwhale-${version}.tar.bz2";
               sha256 = funkwhale-sha256;
             };
+
+            propagatedBuildInputs = [
+
+            ];
 
             patches = [ ./funkwhale.patch ];
 
@@ -89,11 +92,18 @@
               inherit pname version;
               sha256 = "sha256-AjW7XNP0p9ZZZF4qyTfacnkTIUNOd1cPfiEELlEIINo=";
             };
+
+            buildInputs = [
+              poetry-core
+            ];
             propagatedBuildInputs = [
               requests
               cryptography
             ];
             doCheck = false;
+
+            pyproject = true;
+            build_system = [ "poetry" ];
           });
 
         countryinfo =
@@ -141,13 +151,20 @@
           with pkgs.python3.pkgs;
           (buildPythonPackage rec {
             pname = "django-cache-memoize";
-            version = "0.1.10";
+            version = "0.2.0";
             src = fetchPypi {
               inherit pname version;
-              sha256 = "sha256-Y+j6okWkHA262EOAfp8hpuWeuo5uUN8xD99khaZ0mEM=";
+              sha256 = "sha256-eZUKAnukDkr/Tv7Vh7dgNr9bofWTKdexWHl7gyvnLKY=";
             };
             propagatedBuildInputs = [ ];
+
+            buildInputs = [
+              setuptools
+            ];
             doCheck = false;
+
+            pyproject = true;
+            build_system = [ "setup_tools" ];
           });
 
         django-versatileimagefield =
@@ -243,12 +260,14 @@
               hash = "sha256-RQ4X6DKigQsNxaAWXB1meATKP+ddMUgkoAIyX8iIisU=";
             };
 
-            build-system = with python3Packages; [
+            build_system = [ "setup_tools" ];
+
+            buildInputs = [
               setuptools
               setuptools-scm
             ];
 
-            dependencies = with python3Packages; [
+            propagatedBuildInputs = [
               regex
             ];
 
@@ -279,12 +298,16 @@
               hash = "sha256-2/EUzkC+8u6SQZYstIqJnlWcz74f5UpuXh/r4ImNd0g=";
             };
 
-            build-system = with python3Packages; [
+            build_system = [
+              "setuptools"
+            ];
+
+            buildInputs = [
               setuptools
               setuptools-scm
             ];
 
-            dependencies = with python3Packages; [
+            propagatedBuildInputs = [
               requests
             ];
 
@@ -418,11 +441,13 @@
               hash = "sha256-Ij4AFldTXMu3s/SMrd5aFHDKEx0kYtBsdQLO45hMALc=";
             };
 
-            build-system = with python3Packages; [
+            build_system = [ "setup_tools" ];
+
+            buildInputs = [
               setuptools
             ];
 
-            dependencies = with python3Packages; [
+            propagatedBuildInputs = [
               requests
               typing-extensions
             ];
@@ -454,12 +479,14 @@
               hash = "sha256-qLnXaNb1Kon+XPJYCPe31EgXpukIfzTa+LADOzFjE9Q=";
             };
 
-            build-system = with python3Packages; [
+            build_system = [ "setup_tools" ];
+
+            buildInputs = [
               setuptools
               setuptools-scm
             ];
 
-            dependencies = with python3Packages; [
+            propagatedBuildInputs = [
               click
               countryinfo
               lb_matching_tools
@@ -492,11 +519,75 @@
             };
           });
 
+        django-allauth =
+          with final;
+          pkgs.python3.pkgs.django-allauth.overrideAttrs (oa: rec {
+            version = "65.4.1";
+            src = pkgs.fetchFromGitea {
+              domain = "codeberg.org";
+              owner = "allauth";
+              repo = "django-allauth";
+              tag = version;
+              hash = "sha256-z5vaNopIk1CAV+TpH/V3Y6lXf7ztU4QeHZ9OTSPCgc0=";
+            };
+            doCheck = false;
+            dontUsePytestCheck = "please dont";
+          });
+
+        unicode-slugify =
+          with final;
+          with pkgs.python3.pkgs;
+          (buildPythonPackage rec {
+            pname = "unicode-slugify";
+            version = "0.1.5";
+            format = "setuptools";
+
+            src = fetchPypi {
+              inherit pname version;
+              sha256 = "25f424258317e4cb41093e2953374b3af1f23097297664731cdb3ae46f6bd6c3";
+            };
+
+            patches = [
+              ./use_pytest_instead_of_nose.patch
+              # mozilla/unicode-slugify#41: Fix Python 3.12 SyntaxWarning
+              (fetchpatch {
+                url = "https://github.com/mozilla/unicode-slugify/commit/a18826f440d0b74e536f5e32ebdcf30e720f20d8.patch";
+                hash = "sha256-B27psp0XI5GhoR0l5lFpUOh88hHzjJYzJS5PnIkfFws=";
+              })
+            ];
+
+            propagatedBuildInputs = [
+              six
+              unidecode
+            ];
+
+            nativeCheckInputs = [ pytestCheckHook ];
+
+            doCheck = false;
+
+            pytestFlagsArray = [ "slugify/tests.py" ];
+
+            meta = with lib; {
+              description = "Generates unicode slugs";
+              homepage = "https://pypi.org/project/unicode-slugify/";
+              license = licenses.bsd3;
+              maintainers = with maintainers; [ mmai ];
+            };
+          });
+
       };
 
       packages = forAllSystems (system: {
         inherit (nixpkgsFor.${system}) funkwhale;
         inherit (nixpkgsFor.${system}) funkwhale-front;
+        inherit (nixpkgsFor.${system}) requests-http-message-signatures;
+        inherit (nixpkgsFor.${system}) django-cache-memoize;
+        inherit (nixpkgsFor.${system}) lb_matching_tools;
+        inherit (nixpkgsFor.${system}) liblistenbrainz;
+        inherit (nixpkgsFor.${system}) typesense;
+        inherit (nixpkgsFor.${system}) troi;
+        inherit (nixpkgsFor.${system}) django-allauth;
+        inherit (nixpkgsFor.${system}) unicode-slugify;
       });
 
       defaultPackage = forAllSystems (system: self.packages.${system}.funkwhale);

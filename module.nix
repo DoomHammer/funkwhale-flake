@@ -22,6 +22,9 @@ let
         pkgs.liblistenbrainz
         pkgs.typesense
         pkgs.troi
+        # local overrides
+        pkgs.django-allauth
+        pkgs.unicode-slugify
         # --- packages from nixpkgs
         ps.PyLD
         ps.aiohttp
@@ -41,7 +44,6 @@ let
         ps.defusedxml
         ps.dill
         ps.django
-        ps.django-allauth
         ps.django-auth-ldap
         ps.django-cacheops
         ps.django-cleanup
@@ -89,7 +91,6 @@ let
         ps.service-identity
         ps.toml
         ps.tomlkit
-        ps.unicode-slugify
         ps.unidecode
         ps.uvicorn
         ps.uvloop
