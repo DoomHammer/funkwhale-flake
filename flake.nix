@@ -6,9 +6,9 @@
   outputs =
     { self, nixpkgs }:
     let
-      version = "2.0.0-rc5";
-      funkwhale-sha256 = "sha256-9Hq27CEEwKl1WVYhZVQf4pc91uT55Qr+dqVA9avxzWA=";
-      funkwhale-front-sha256 = "sha256-FvZ/8q7WS+xfaH+fcLPiK0STVJVCqwSyqV1sBSDgEWE=";
+      version = "2.0.0-rc15";
+      funkwhale-sha256 = "sha256-oGY5Shu+anpA2P6cLm1Zq0sOZfjAVAA0CBeICXfdOMI=";
+      funkwhale-front-sha256 = "sha256-Ma507TgqWae00ig5/DHuQUvaII6015UUgKIkUiXv6FQ=";
       systems = [
         "x86_64-linux"
         "i686-linux"
@@ -64,7 +64,7 @@
 
             patches = [ ./funkwhale.patch ];
 
-            buildPhase = ''echo Skipping build phase'';
+            buildPhase = "echo Skipping build phase";
 
             installPhase = ''
               mkdir $out
