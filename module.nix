@@ -26,7 +26,7 @@ let
         pkgs.django-allauth
         pkgs.unicode-slugify
         # --- packages from nixpkgs
-        ps.PyLD
+        ps.pyld
         ps.aiohttp
         ps.aioredis
         ps.arrow
@@ -49,15 +49,15 @@ let
         ps.django-cleanup
         ps.django-cors-headers
         ps.django-dynamic-preferences
+        ps.django-environ
         ps.django-extensions
         ps.django-filter
         ps.django-oauth-toolkit
         ps.django-redis
         ps.django-storages
+        ps.django-taggit
         ps.django-versatileimagefield # fails with ERROR: Could not find a version that satisfies the requirement Django>=3.0 (
         # pkgs.django-versatileimagefield
-        ps.django_environ
-        ps.django_taggit
         ps.djangorestframework
         ps.dj-rest-auth
         ps.drf-spectacular
@@ -67,7 +67,6 @@ let
         ps.isort
         ps.kombu
         ps.lazy-object-proxy
-        ps.ldap
         ps.markdown
         ps.musicbrainzngs
         ps.mutagen
@@ -84,7 +83,8 @@ let
         ps.pyopenssl
         ps.pyrsistent
         ps.python-ffmpeg
-        ps.python_magic
+        ps.python-ldap
+        ps.python-magic
         ps.pytz
         ps.redis
         ps.requests

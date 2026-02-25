@@ -6,9 +6,9 @@
   outputs =
     { self, nixpkgs }:
     let
-      version = "2.0.0-rc15";
-      funkwhale-sha256 = "sha256-oGY5Shu+anpA2P6cLm1Zq0sOZfjAVAA0CBeICXfdOMI=";
-      funkwhale-front-sha256 = "sha256-Ma507TgqWae00ig5/DHuQUvaII6015UUgKIkUiXv6FQ=";
+      version = "2.0.0-rc19";
+      funkwhale-sha256 = "sha256-PzI5uJA7YosIJBMmNmcz7CyWZbR45XQ2suJd69XMqE4=";
+      funkwhale-front-sha256 = "sha256-TfKrMR5vvVcYJiZkTKJ1pAeWJYrnsPRmcZSBLuRT96U=";
       systems = [
         "x86_64-linux"
         "i686-linux"
@@ -522,13 +522,13 @@
         django-allauth =
           with final;
           pkgs.python3.pkgs.django-allauth.overrideAttrs (oa: rec {
-            version = "65.4.1";
+            version = "65.14.1";
             src = pkgs.fetchFromGitea {
               domain = "codeberg.org";
               owner = "allauth";
               repo = "django-allauth";
               tag = version;
-              hash = "sha256-z5vaNopIk1CAV+TpH/V3Y6lXf7ztU4QeHZ9OTSPCgc0=";
+              hash = "sha256-xSAaofmeAzOoCzRaNE+CBVW41lmZagwgiOUbCaz6z3o=";
             };
             doCheck = false;
             dontUsePytestCheck = "please dont";
